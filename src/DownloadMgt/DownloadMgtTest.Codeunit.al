@@ -1,15 +1,14 @@
 codeunit 50101 DownloadMgtTest
 {
     trigger OnRun()
-    begin
-        downloadZipPackageTests();
-    end;
-
-    local procedure downloadZipPackageTests()
     var
         DownloadMgt: Codeunit DownloadMgt;
     begin
         initializeDummies();
+        DownloadMgt.TextFile().
+                        AddTextLine('Line 1').
+                        AddTextLine('Line 2').
+                        DownloadTextFile('sampleTextFile.txt');
         DownloadMgt.Package().
                         New().
                         AddFile(dummyFile1, 'dummyFile1.txt').

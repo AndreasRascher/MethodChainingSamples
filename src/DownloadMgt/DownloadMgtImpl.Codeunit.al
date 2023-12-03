@@ -1,11 +1,9 @@
-codeunit 50105 DownloadMgtImpl implements IPackageActions
+codeunit 50105 DownloadMgtImpl implements IPackageActions, ITextFileActions
 {
     var
-        ContentGlobal: TextBuilder;
-        DownloadFileNameGlobal: Text;
-        requestedExtensionsFiltersGlobal: List of [Text];
         tempBlobListGlobal: Codeunit "Temp Blob List";
         fileNamesGlobal: Dictionary of [Integer, Text];
+        TextFileContentGlobal: TextBuilder;
 
     procedure New() IPackageActions: Interface IPackageActions;
     var
@@ -23,7 +21,7 @@ codeunit 50105 DownloadMgtImpl implements IPackageActions
         tempBlob.CreateOutStream(outS);
         CopyStream(outS, inS);
         AddFile(tempBlob, fileName);
-        InnerDownloadMgt.Set(tempBlobListGlobal, fileNamesGlobal);
+        InnerDownloadMgt.SetPackageVars(tempBlobListGlobal, fileNamesGlobal);
         exit(InnerDownloadMgt);
     end;
 
@@ -33,18 +31,8 @@ codeunit 50105 DownloadMgtImpl implements IPackageActions
     begin
         tempBlobListGlobal.Add(tempBlob);
         fileNamesGlobal.Set(tempBlobListGlobal.Count(), fileName);
-        InnerDownloadMgt.Set(tempBlobListGlobal, fileNamesGlobal);
+        InnerDownloadMgt.SetPackageVars(tempBlobListGlobal, fileNamesGlobal);
         exit(InnerDownloadMgt);
-    end;
-
-    procedure AddContent(var textBuilderContent: TextBuilder) IPackageActions: Interface IPackageActions;
-    begin
-
-    end;
-
-    procedure AddContent(var Text: Text) IPackageActions: Interface IPackageActions;
-    begin
-
     end;
 
     procedure DownloadPackage(packageFileName: Text);
@@ -73,10 +61,59 @@ codeunit 50105 DownloadMgtImpl implements IPackageActions
         end;
     end;
 
-    internal procedure Set(var tempBlobList: Codeunit System.Utilities."Temp Blob List"; fileNames: Dictionary of [Integer, Text])
+    internal procedure SetPackageVars(var tempBlobList: Codeunit System.Utilities."Temp Blob List"; fileNames: Dictionary of [Integer, Text])
     begin
         tempBlobListGlobal.AddRange(tempBlobList);
         fileNamesGlobal := fileNames;
     end;
 
+    internal procedure SetTextfileVars(textFileContentNew: TextBuilder)
+    begin
+        TextFileContentGlobal := textFileContentNew;
+    end;
+
+    procedure NewTextFile() ITextFileActions: Interface ITextFileActions;
+    var
+        InnerDownloadMgt: Codeunit DownloadMgtImpl;
+    begin
+        Clear(TextFileContentGlobal);
+        InnerDownloadMgt.SetTextfileVars(TextFileContentGlobal);
+        exit(InnerDownloadMgt);
+    end;
+
+    procedure AddText(textToAppend: Text) ITextFileActions: Interface ITextFileActions;
+    var
+        InnerDownloadMgt: Codeunit DownloadMgtImpl;
+    begin
+        TextFileContentGlobal.Append(textToAppend);
+        InnerDownloadMgt.SetTextfileVars(TextFileContentGlobal);
+        exit(InnerDownloadMgt);
+    end;
+
+    procedure AddTextLine(lineText: Text) ITextFileActions: Interface ITextFileActions;
+    var
+        InnerDownloadMgt: Codeunit DownloadMgtImpl;
+    begin
+        TextFileContentGlobal.AppendLine(lineText);
+        InnerDownloadMgt.SetTextfileVars(TextFileContentGlobal);
+        exit(InnerDownloadMgt);
+    end;
+
+    procedure DownloadTextFile(toFileName: Text) ITextFileActions: Interface ITextFileActions;
+    var
+        InnerDownloadMgt: Codeunit DownloadMgtImpl;
+        InS: InStream;
+    begin
+        WriteToTempBlob().CreateInStream(InS);
+        DownloadFromStream(InS, '', '', '', toFileName);
+        exit(InnerDownloadMgt);
+    end;
+
+    procedure WriteToTempBlob() fileContent: codeunit System.Utilities."Temp Blob";
+    var
+        OutS: OutStream;
+    begin
+        fileContent.CreateOutStream(OutS);
+        OutS.WriteText(TextFileContentGlobal.ToText());
+    end;
 }

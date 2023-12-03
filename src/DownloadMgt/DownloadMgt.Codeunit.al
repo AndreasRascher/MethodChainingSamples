@@ -6,4 +6,11 @@ codeunit 50100 DownloadMgt
     begin
         exit(InnerDownloadMgt);
     end;
+
+    procedure TextFile() ITextFileActions: Interface ITextFileActions
+    var
+        InnerDownloadMgt: Codeunit DownloadMgtImpl;
+    begin
+        exit(InnerDownloadMgt);
+    end;
 }
