@@ -25,7 +25,7 @@ codeunit 50105 DownloadMgtImpl implements IPackageActions, ITextFileActions
         exit(InnerDownloadMgt);
     end;
 
-    procedure AddFile(var tempBlob: codeunit System.Utilities."Temp Blob"; fileName: Text) IPackageActions: Interface IPackageActions;
+    procedure AddFile(tempBlob: codeunit System.Utilities."Temp Blob"; fileName: Text) IPackageActions: Interface IPackageActions;
     var
         InnerDownloadMgt: Codeunit DownloadMgtImpl;
     begin
@@ -104,12 +104,12 @@ codeunit 50105 DownloadMgtImpl implements IPackageActions, ITextFileActions
         InnerDownloadMgt: Codeunit DownloadMgtImpl;
         InS: InStream;
     begin
-        WriteToTempBlob().CreateInStream(InS);
+        AsTempBlob().CreateInStream(InS);
         DownloadFromStream(InS, '', '', '', toFileName);
         exit(InnerDownloadMgt);
     end;
 
-    procedure WriteToTempBlob() fileContent: codeunit System.Utilities."Temp Blob";
+    procedure AsTempBlob() fileContent: codeunit System.Utilities."Temp Blob";
     var
         OutS: OutStream;
     begin

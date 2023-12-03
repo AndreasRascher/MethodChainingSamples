@@ -4,15 +4,17 @@ codeunit 50101 DownloadMgtTest
     var
         DownloadMgt: Codeunit DownloadMgt;
     begin
-        initializeDummies();
         DownloadMgt.TextFile().
                         AddTextLine('Line 1').
                         AddTextLine('Line 2').
                         DownloadTextFile('sampleTextFile.txt');
+
+        initializeDummies();
         DownloadMgt.Package().
                         New().
                         AddFile(dummyFile1, 'dummyFile1.txt').
                         AddFile(dummyFile2, 'dummyFile2.txt').
+                        AddFile(DownloadMgt.TextFile().AddText('Content File 3').AsTempBlob(), 'dummyFile3.txt').
                         DownloadPackage('Package.zip');
     end;
 
