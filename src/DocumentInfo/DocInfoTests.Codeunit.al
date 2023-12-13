@@ -1,4 +1,4 @@
-codeunit 50103 DocInfoTests
+codeunit 50303 DocInfoTests
 {
     trigger OnRun()
     var

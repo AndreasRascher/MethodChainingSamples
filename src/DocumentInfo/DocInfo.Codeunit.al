@@ -1,4 +1,4 @@
-codeunit 50102 DocInfo
+codeunit 50300 DocInfo
 {
     procedure From(SalesHeader: Record "Sales Header"): Interface DocInfo
     var

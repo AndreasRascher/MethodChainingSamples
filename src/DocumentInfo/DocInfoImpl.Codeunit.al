@@ -1,4 +1,4 @@
-codeunit 50104 DocInfoImpl implements DocInfoSalesAddress, DocInfo, RelatedTables
+codeunit 50304 DocInfoImpl implements DocInfoSalesAddress, DocInfo, RelatedTables
 {
     procedure setHeaderRec(HeaderNew: Variant)
     begin

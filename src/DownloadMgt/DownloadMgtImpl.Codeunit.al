@@ -1,4 +1,4 @@
-codeunit 50105 DownloadMgtImpl implements IPackageActions, ITextFileActions
+codeunit 50305 DownloadMgtImpl implements IPackageActions, ITextFileActions
 {
     var
         tempBlobListGlobal: Codeunit "Temp Blob List";
