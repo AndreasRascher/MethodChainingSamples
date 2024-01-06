@@ -2,14 +2,14 @@
 // Remember that object names and IDs should be unique across all extensions.
 // AL snippets start with t*, like tpageext - give them a try and happy coding!
 
-pageextension 50300 CustomerListExt extends "Customer List"
+pageextension 50100 CustomerListExt extends "Customer List"
 {
     trigger OnOpenPage();
     var
-        // DownloadMgtTest: Codeunit DownloadMgtTest;
-        DocInfoTests: Codeunit DocInfoTests;
+    // DownloadMgtTest: Codeunit DownloadMgtTest;
+    // DocInfoTests: Codeunit doc;
     begin
-        DocInfoTests.Run();
+        // DocInfoTests.Run();
         // tempBlobTest();
         // DownloadMgtTest.Run();
     end;
