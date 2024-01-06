@@ -1,4 +1,4 @@
-codeunit 50100 DownloadMgt
+codeunit 50302 DownloadMgt
 {
     procedure Package() IPackageActions: Interface IPackageActions
     var

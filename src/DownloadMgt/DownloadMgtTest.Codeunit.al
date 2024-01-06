@@ -1,9 +1,10 @@
-codeunit 50101 DownloadMgtTest
+codeunit 50301 DownloadMgtTest
 {
     trigger OnRun()
     var
         DownloadMgt: Codeunit DownloadMgt;
     begin
+        DownloadMgt.Package().AddFile(dummyFile1, '123.test').DownloadPackage('1.zip');
         DownloadMgt.TextFile().
                         AddTextLine('Line 1').
                         AddTextLine('Line 2').
