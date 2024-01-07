@@ -9,7 +9,7 @@ The interface object type has no object ID. It is used to provide a subset of me
 Objects                 | Description
 ------------------------|------------------------
 Codeunit DocInfo        | Access to DocInfo functions
-Codeunit DocInfoImpl    | implementation layer
+Codeunit DocInfoImpl    | all interface implementations
 multiple interfaces     | used to structure and chain methods
 
 ## Overview Available Method Chains
