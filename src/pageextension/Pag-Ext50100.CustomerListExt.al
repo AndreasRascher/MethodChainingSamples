@@ -6,9 +6,15 @@ pageextension 50300 CustomerListExt extends "Customer List"
 {
     trigger OnOpenPage();
     var
-    // DownloadMgtTest: Codeunit DownloadMgtTest;
-    // DocInfoTests: Codeunit doc;
+        // DownloadMgtTest: Codeunit DownloadMgtTest;
+        // DocInfoTests: Codeunit doc;
+        docInfo: Codeunit DocInfo;
+        purchaseHeader: Record "Purchase Header";
+        purchaseLine: Record "Purchase Line";
+        tempTrackingSpecBuffer: Record "Tracking Specification" temporary;
     begin
+        DocInfo.From(purchaseHeader).RelatedTables().PaymentTerms();
+        docInfo.From(purchaseLine).TrackingSpecification(tempTrackingSpecBuffer);
         // DocInfoTests.Run();
         // tempBlobTest();
         // DownloadMgtTest.Run();
