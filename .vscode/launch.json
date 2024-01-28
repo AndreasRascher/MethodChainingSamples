@@ -2,14 +2,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Your own server",
+            "name": "BC23 ALTestToolPage",
             "request": "launch",
             "type": "al",
             "environmentType": "OnPrem",
             "server": "http://bc23",
             "serverInstance": "BC",
             "authentication": "UserPassword",
-            "startupObjectId": 22,
+            "startupObjectId": 130451,
             "startupObjectType": "Page",
             "breakOnError": "All",
             "launchBrowser": true,
