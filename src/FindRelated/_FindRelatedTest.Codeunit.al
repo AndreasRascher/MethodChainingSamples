@@ -15,7 +15,6 @@ codeunit 50101 FindRelatedTest
         item: Record Item;
     begin
         findCreateSampleSalesHeader(salesHeader);
-        hasLines := FindRelated.ForSalesHeader(salesHeader).FilterSalesLines(salesline);
 
         found := FindRelated.ForSalesHeader(salesHeader).PaymentTerms(paymentTerms);
         paymentTerms.TestField(Code, salesHeader."Payment Terms Code");
@@ -33,7 +32,13 @@ codeunit 50101 FindRelatedTest
         customer.TestField("No.", salesHeader."Bill-to Customer No.");
         found := FindRelated.ForSalesHeader(salesHeader).SellToCustomer(Customer);
         customer.TestField("No.", salesHeader."Sell-to Customer No.");
-        FindRelated.ForSalesLine(salesline).Item()
+        // find line with item
+        salesline.SetRange(Type, salesline.Type::Item);
+        salesline.FindFirst();
+        salesHeader.get(salesline."Document Type", salesline."Document No.");
+        hasLines := FindRelated.ForSalesHeader(salesHeader).FilterSalesLines(salesline);
+        found := FindRelated.ForSalesLine(salesline).Item(item);
+        if not found then Error('Item not found');
     end;
 
     [Test]
@@ -56,14 +61,13 @@ codeunit 50101 FindRelatedTest
         paymentTerms: Record "Payment Terms";
         shipmentMethod: Record "Shipment Method";
         Purchaser: Record "Salesperson/Purchaser";
+        item: Record Item;
         AddrArray: array[8] of Text[100];
     begin
         Purchaseheader.SetFilter("Payment Terms Code", '<>%1', '');
         Purchaseheader.SetFilter("Shipment Method Code", '<>%1', '');
         Purchaseheader.SetFilter("Purchaser Code", '<>%1', '');
         Purchaseheader.FindFirst();
-
-        FindRelated.ForPurchaseHeader(PurchaseHeader).FilterPurchaseLines(Purchaseline);
 
         FindRelated.ForPurchaseHeader(Purchaseheader).PaymentTerms(paymentTerms);
         paymentTerms.TestField(Code, Purchaseheader."Payment Terms Code");
@@ -77,6 +81,16 @@ codeunit 50101 FindRelatedTest
         FindRelated.ForPurchaseHeader(Purchaseheader).PurchaseAddress().BuyFromAddress(AddrArray);
         FindRelated.ForPurchaseHeader(Purchaseheader).PurchaseAddress().PayToAddress(AddrArray);
         FindRelated.ForPurchaseHeader(Purchaseheader).PurchaseAddress().ShipToAddress(AddrArray);
+
+        // find line with item
+        Purchaseline.SetRange(Type, Purchaseline.Type::Item);
+        Purchaseline.FindFirst();
+        Purchaseheader.get(Purchaseline."Document Type", Purchaseline."Document No.");
+        FindRelated.ForPurchaseHeader(PurchaseHeader).FilterPurchaseLines(Purchaseline);
+        Purchaseline.FindSet();
+        repeat
+            FindRelated.ForPurchaseLine(Purchaseline).Item(item);
+        until Purchaseline.Next() = 0;
     end;
 
     [Test]

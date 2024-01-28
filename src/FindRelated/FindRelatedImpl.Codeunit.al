@@ -64,6 +64,16 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
             recRef.SetTable(SalesHeader);
     end;
 
+    local procedure GetSalesLine(var SalesLine: Record "Sales Line"; RecVariant: Variant) OK: Boolean
+    var
+        recRef: RecordRef;
+    begin
+        recRef.GetTable(RecVariant);
+        OK := (recRef.Name = SalesLine.TableName);
+        if OK then
+            recRef.SetTable(SalesLine);
+    end;
+
     local procedure GetPurchaseHeader(var PurchaseHeader: Record "Purchase Header"; RecVariant: Variant) OK: Boolean
     var
         recRef: RecordRef;
@@ -94,6 +104,16 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
             recRef.SetTable(SalesInvoiceHeader);
     end;
 
+    local procedure GetSalesInvLine(var SalesInvoiceLine: Record "Sales Invoice Line"; RecVariant: Variant) OK: Boolean
+    var
+        recRef: RecordRef;
+    begin
+        recRef.GetTable(RecVariant);
+        OK := (recRef.Name = SalesInvoiceLine.TableName);
+        if OK then
+            recRef.SetTable(SalesInvoiceLine);
+    end;
+
     local procedure GetSalesCrMemoHeader(var SalesCrMemoHeader: Record "Sales Cr.Memo Header"; RecVariant: Variant) OK: Boolean
     var
         recRef: RecordRef;
@@ -102,6 +122,16 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
         OK := (recRef.Name = SalesCrMemoHeader.TableName);
         if OK then
             recRef.SetTable(SalesCrMemoHeader);
+    end;
+
+    local procedure GetSalesCrMemoLine(var SalesCrMemoLine: Record "Sales Cr.Memo Line"; RecVariant: Variant) OK: Boolean
+    var
+        recRef: RecordRef;
+    begin
+        recRef.GetTable(RecVariant);
+        OK := (recRef.Name = SalesCrMemoLine.TableName);
+        if OK then
+            recRef.SetTable(SalesCrMemoLine);
     end;
 
     local procedure GetSalesShptHeader(var SalesShptHeader: Record "Sales Shipment Header"; RecVariant: Variant) OK: Boolean
@@ -114,6 +144,16 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
             recRef.SetTable(SalesShptHeader);
     end;
 
+    local procedure GetSalesShptLine(var SalesShptLine: Record "Sales Shipment Line"; RecVariant: Variant) OK: Boolean
+    var
+        recRef: RecordRef;
+    begin
+        recRef.GetTable(RecVariant);
+        OK := (recRef.Name = SalesShptLine.TableName);
+        if OK then
+            recRef.SetTable(SalesShptLine);
+    end;
+
     local procedure GetPurchaseInvHeader(purchInvHeader: Record "Purch. Inv. Header"; RecVariant: Variant) OK: Boolean
     var
         recRef: RecordRef;
@@ -122,6 +162,16 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
         OK := (recRef.Name = purchInvHeader.TableName);
         if OK then
             recRef.SetTable(purchInvHeader);
+    end;
+
+    local procedure GetPurchaseInvLine(purchInvLine: Record "Purch. Inv. Line"; RecVariant: Variant) OK: Boolean
+    var
+        recRef: RecordRef;
+    begin
+        recRef.GetTable(RecVariant);
+        OK := (recRef.Name = purchInvLine.TableName);
+        if OK then
+            recRef.SetTable(purchInvLine);
     end;
 
     local procedure GetPurchCrMemoHeader(purchCrMemoHdr: Record "Purch. Cr. Memo Hdr."; RecVariant: Variant) OK: Boolean
@@ -134,6 +184,16 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
             recRef.SetTable(purchCrMemoHdr);
     end;
 
+    local procedure GetPurchCrMemoLine(purchCrMemoLine: Record "Purch. Cr. Memo Line"; RecVariant: Variant) OK: Boolean
+    var
+        recRef: RecordRef;
+    begin
+        recRef.GetTable(RecVariant);
+        OK := (recRef.Name = purchCrMemoLine.TableName);
+        if OK then
+            recRef.SetTable(purchCrMemoLine);
+    end;
+
     local procedure GetPurchRcpHeader(purchRcptHeader: Record "Purch. Rcpt. Header"; RecVariant: Variant) OK: Boolean
     var
         recRef: RecordRef;
@@ -142,6 +202,16 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
         OK := (recRef.Name = purchRcptHeader.TableName);
         if OK then
             recRef.SetTable(purchRcptHeader);
+    end;
+
+    local procedure GetPurchRcpLine(purchRcptLine: Record "Purch. Rcpt. Line"; RecVariant: Variant) OK: Boolean
+    var
+        recRef: RecordRef;
+    begin
+        recRef.GetTable(RecVariant);
+        OK := (recRef.Name = purchRcptLine.TableName);
+        if OK then
+            recRef.SetTable(purchRcptLine);
     end;
 
     local procedure GetCustomer(var Customer: Record Customer; RecVariant: Variant) OK: Boolean
@@ -272,8 +342,41 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
 
     #region ISalesLine Members
     procedure Item(var Item: Record Item) Found: Boolean;
+    var
+        salesLine: Record "Sales Line";
+        salesInvLine: Record "Sales Invoice Line";
+        salesCrMemoLine: Record "Sales Cr.Memo Line";
+        salesshipmentLine: Record "Sales Shipment Line";
+        purchaseLine: Record "Purchase Line";
+        purchaseInvLine: Record "Purch. Inv. Line";
+        purchcrMemoLine: Record "Purch. Cr. Memo Line";
+        purchRcptLine: Record "Purch. Rcpt. Line";
     begin
-
+        case true of
+            GetSalesLine(salesLine, StartPointVariant):
+                if (salesLine.Type = salesLine.Type::Item) then
+                    Found := Item.get(salesLine."No.");
+            GetSalesInvLine(salesInvLine, StartPointVariant):
+                if (salesInvLine.Type = salesInvLine.Type::Item) then
+                    Found := Item.get(salesInvLine."No.");
+            GetSalesCrMemoLine(salesCrMemoLine, StartPointVariant):
+                if (salesCrMemoLine.Type = salesCrMemoLine.Type::Item) then
+                    Found := Item.get(salesCrMemoLine."No.");
+            GetSalesShptLine(salesshipmentLine, StartPointVariant):
+                if (salesshipmentLine.Type = salesshipmentLine.Type::Item) then
+                    Found := Item.get(salesshipmentLine."No.");
+            GetPurchaseLine(purchaseLine, StartPointVariant):
+                if (purchaseLine.type = purchaseLine.Type::Item) then
+                    Found := Item.get(purchaseLine."No.");
+            GetPurchaseInvLine(purchaseInvLine, StartPointVariant):
+                if (purchaseInvLine.type = purchaseInvLine.Type::Item) then
+                    Found := Item.get(purchaseInvLine."No.");
+            GetPurchCrMemoLine(purchcrMemoLine, StartPointVariant):
+                if (purchcrMemoLine.type = purchcrMemoLine.Type::Item) then
+                    Found := Item.get(purchcrMemoLine."No.");
+            else
+                Error('unhandled case');
+        end;
     end;
 
     #endregion ISalesLine Members
@@ -413,8 +516,14 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
     end;
 
     procedure Item() IItem: Interface IItem;
+    var
+        findrelatedimpl: Codeunit FindRelatedImpl;
+        item: Record Item;
+        Found: Boolean;
     begin
-
+        Found := Item(Item);
+        findrelatedimpl.SetStartPointRec(item);
+        exit(findrelatedimpl);
     end;
     #endregion IStandardText Members
 
