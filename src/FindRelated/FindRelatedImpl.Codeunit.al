@@ -224,6 +224,16 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
             recRef.SetTable(Customer);
     end;
 
+    local procedure GetItem(var Item: Record Item; RecVariant: Variant) OK: Boolean
+    var
+        recRef: RecordRef;
+    begin
+        recRef.GetTable(RecVariant);
+        OK := (recRef.Name = Item.TableName);
+        if OK then
+            recRef.SetTable(Item);
+    end;
+
     local procedure RelationData_GetFirstForTable(TableNo: Integer) Value: Text
     var
         fieldRelations: Dictionary of [Integer, List of [Text]]; // Integer=Field No, List1: Field Name List2: Value
@@ -542,8 +552,20 @@ codeunit 50103 FindRelatedImpl implements ISalesHeader,
     end;
 
     procedure findItemAttributeValue(var itemAttributeValue: Record "Item Attribute Value"; ItemAttributeID: Integer) Found: Boolean;
+    var
+        ItemAttributeValueMapping: Record "Item Attribute Value Mapping";
+        Item: Record Item;
     begin
-
+        if not GetItem(Item, StartPointVariant) then
+            exit;
+        ItemAttributeValueMapping.SetRange("Table ID", DATABASE::Item);
+        ItemAttributeValueMapping.SetRange("No.", Item."No.");
+        ItemAttributeValueMapping.SetRange("Item Attribute ID", ItemAttributeID);
+        Found := itemAttributeValueMapping.Findfirst();
+        if not Found then
+            exit;
+        ItemAttributeValue.get(ItemAttributeValueMapping."Item Attribute ID", itemAttributeValueMapping."Item Attribute Value ID");
+        ItemAttributeValue.CalcFields("Attribute Name");
     end;
     #endregion IItem Members
 }

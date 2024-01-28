@@ -12,4 +12,4 @@ FindRelated	ForPurchaseHeader	PurchaseLines
 FindRelated	ForStandardText		FindExtendedTextLines
 FindRelated	ForSalesLine		Item|TrackingSpecification
 FindRelated	ForPurchaseLine		Item|TrackingSpecification
-FinReladted	ForCustomer		PrimaryContact
+FindRelated	ForCustomer		PrimaryContact

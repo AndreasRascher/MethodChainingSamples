@@ -98,11 +98,21 @@ codeunit 50101 FindRelatedTest
     var
         item: Record Item;
         countryRegion: Record "Country/Region";
+        itemAttributeValue: Record "Item Attribute Value";
+        ItemAttributeValueMapping: Record "Item Attribute Value Mapping";
+        ItemAttributeID: Integer;
     begin
         findCreateSampleItem(item);
         Found := FindRelated.forItem(item).CountryRegionOfOrigin(countryRegion);
         countryRegion := FindRelated.ForItem(item).CountryRegionOfOrigin();
         countryRegion.TestField(Code, item."Country/Region of Origin Code");
+        // find item with attribute
+        ItemAttributeValueMapping.SetRange("Table ID", Database::Item);
+        ItemAttributeValueMapping.findfirst();
+        item.Get(ItemAttributeValueMapping."No.");
+        ItemAttributeID := ItemAttributeValueMapping."Item Attribute ID";
+        FindRelated.ForItem(item).findItemAttributeValue(itemAttributeValue, ItemAttributeID);
+        itemAttributeValue.TestField("Attribute ID", ItemAttributeValueMapping."Item Attribute ID");
     end;
 
     local procedure findCreateSampleSalesHeader(var salesHeader: Record "Sales Header")
